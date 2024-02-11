@@ -156,6 +156,7 @@ MonoBehaviour:
   _height: 11
   parentObj: {fileID: 1912869897}
   _cardItem: {fileID: 7699143090038438644, guid: ef895e6af7f0be24fb5c44981ea8de01, type: 3}
+  _lineRenderer: {fileID: 819157855412199267, guid: c6c825f13297cbc47b850e27ab79b87f, type: 3}
 --- !u!4 &280464269
 Transform:
   m_ObjectHideFlags: 0

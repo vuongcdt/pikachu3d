@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Common;
+using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 
 public class MainManager : MonoBehaviour
@@ -10,19 +11,26 @@ public class MainManager : MonoBehaviour
 
     [SerializeField] private Transform parentObj;
     [SerializeField] private CardItem _cardItem;
-
-    private List<ImageWithType> _images = new List<ImageWithType>();
-
-    private List<ItemStore> _itemsStore = new List<ItemStore>();
-    private IEnumerable<int> _itemsNoValueByAxis;
+    [SerializeField] private LineRenderer _lineRenderer;
 
     private CardItem _firstItem, _lastItem;
+
+    private List<ImageWithType> _images = new List<ImageWithType>();
+    private List<ItemStore> _itemsStore = new List<ItemStore>();
+    private List<ItemStore> _drawLine = new List<ItemStore>();
     private List<CardItem> spawnedItemsList = new List<CardItem>();
+    private LineRenderer line;
 
     private void Awake()
     {
         GetResouece();
         GenerateGrid();
+        Debug.Log(spawnedItemsList.Count);
+        // spawnedItemsList.ForEach(e =>
+        // {
+        //     // e._spriteRenderer.sprite.border.Set(2,2,2,2);
+        //     e._spriteRenderer.color = Color.gray;
+        // });
     }
 
     private void GetResouece()
@@ -41,7 +49,11 @@ public class MainManager : MonoBehaviour
         }
 
         //fix
+        RamdomImages();
+    }
 
+    private void RamdomImages()
+    {
         _images = _images
             .OrderBy(e => Random.Range(0, _width * _height))
             .ToList();
@@ -77,16 +89,18 @@ public class MainManager : MonoBehaviour
                     imageWithId.TypeImage,
                     isHas
                 ));
-                
+
                 spawnedItemsList.Add(spawnedItem);
 
                 if (isHas) count++;
             }
         }
     }
-    
+
     public void SetItem(CardItem cardItem)
     {
+        cardItem._spriteRenderer.color = Color.grey;
+
         cardItem.IfIsNull(() => { SetDefaultWorkingItem(); });
 
         if (_firstItem == null)
@@ -96,24 +110,22 @@ public class MainManager : MonoBehaviour
             return;
         }
 
-        if(_firstItem.Id == cardItem.Id)
+        if (_firstItem.Id == cardItem.Id)
         {
             SetDefaultWorkingItem();
             return;
         }
-        
+
         Debug.Log("Set last item!" + cardItem.ToString());
         _lastItem = cardItem;
         if (_firstItem.TypeImage != _lastItem.TypeImage)
         {
-            Debug.Log("Not same!");
+            // Debug.Log("Not same!");
             SetDefaultWorkingItem();
             return;
         }
 
         CompareItems();
-
-        SetDefaultWorkingItem();
     }
 
     private void CompareItems()
@@ -122,14 +134,23 @@ public class MainManager : MonoBehaviour
             .Where(e => !e.IsHas || e.Id == _lastItem.Id || e.Id == _firstItem.Id);
 
         var checkByVertical = CheckNoValueByAxis(Axis.Vertical, itemsNoValue);
+        if (checkByVertical)
+        {
+            Invoke("SetHideWorkingItem", 0.2f);
+            return;
+        }
+
         var checkByHorizontal = CheckNoValueByAxis(Axis.Horizontal, itemsNoValue);
 
-        Debug.Log(checkByVertical + " checkByVertical");
-        Debug.Log(checkByHorizontal + " checkByHorizontal");
-        if(checkByVertical || checkByHorizontal)
+        // Debug.Log(checkByVertical + " checkByVertical");
+        // Debug.Log(checkByHorizontal + " checkByHorizontal");
+        if (checkByHorizontal)
         {
-            SetHideWorkingItem();
+            Invoke("SetHideWorkingItem", 0.2f);
+            // SetHideWorkingItem();
+            return;
         }
+        SetDefaultWorkingItem();
     }
 
     private bool CheckNoValueByAxis(Axis axis, IEnumerable<ItemStore> itemStores)
@@ -156,7 +177,7 @@ public class MainManager : MonoBehaviour
             .Where(e => e.Count() == distance + 1)
             .Select(e => e.Key);
 
-        var result = false;
+        var isPass = false;
 
         foreach (var tempY in checkVertical)
         {
@@ -164,12 +185,70 @@ public class MainManager : MonoBehaviour
             var entryMaxX = CheckNoValueByAxis(axis, itemStores, tempY, YOfMaxX, maxX);
             if (entryMinX && entryMaxX)
             {
-                result = true;
+                RenderLine(tempY, axis);
+
+                // Debug.Log(tempY + "////////////");
+                // var drawLine = spawnedItemsList.Where(e =>
+                //     e.FlipAxis(axis).y == tempY 
+                //     && e.FlipAxis(axis).x >= minX 
+                //     && e.FlipAxis(axis).x <= maxX);
+                //
+                // Debug.Log(drawLine.Count()+"|||||||");
+                // foreach (var itemStore in drawLine)
+                // {
+                //     itemStore._spriteRenderer.sprite = _images[0].Sprite;
+                //     itemStore._spriteRenderer.color = Color.red;
+                //     itemStore._spriteRenderer.size = new Vector2(1,1);
+                // }
+
+                isPass = true;
                 break;
             }
+
+            Debug.Log(isPass + "isPass");
         }
 
-        return result;
+        return isPass;
+    }
+
+    private void RenderLine(float tempY, Axis axis)
+    {
+        var xOfPoint2 = _firstItem.FlipAxis(axis).x;
+        var xOfPoint3 = _lastItem.FlipAxis(axis).x;
+        var yOfPoint2 = tempY;
+        var yOfPoint3 = tempY;
+        if (axis == Axis.Horizontal)
+        {
+            xOfPoint2 = xOfPoint3 = tempY;
+            yOfPoint2 = _firstItem.FlipAxis(axis).x;
+            yOfPoint3 = _lastItem.FlipAxis(axis).x;
+        }
+
+        Vector3[] points = new[]
+        {
+            _firstItem.transform.position,
+            new Vector3(xOfPoint2, yOfPoint2, -0.1f),
+            new Vector3(xOfPoint3, yOfPoint3, -0.1f),
+            _lastItem.transform.position
+        };
+
+        _lineRenderer.positionCount = 4;
+        for (var i = 0; i < points.Length; i++)
+        {
+            _lineRenderer.SetPosition(i, points[i]);
+        }
+
+        line = Instantiate(
+            _lineRenderer,
+            points[0],
+            Quaternion.identity,
+            parentObj);
+        Invoke("RemoveLine", 0.2f);
+    }
+
+    private void RemoveLine()
+    {
+        line.positionCount = 0;
     }
 
     private bool CheckNoValueByAxis(Axis axis, IEnumerable<ItemStore> itemStores, float minY, float maxY, float x)
@@ -186,19 +265,24 @@ public class MainManager : MonoBehaviour
 
     private void SetDefaultWorkingItem()
     {
+        _firstItem._spriteRenderer.color = Color.white;
+        _lastItem._spriteRenderer.color = Color.white;
         _firstItem = null;
         _lastItem = null;
+        // spawnedItemsList.ForEach(e => e._spriteRenderer.color = Color.white);
+
     }
 
     private void SetHideWorkingItem()
     {
         _itemsStore.ForEach(e =>
         {
-            if (e.Id == _firstItem.Id || e.Id == _lastItem.Id) 
+            if (e.Id == _firstItem.Id || e.Id == _lastItem.Id)
                 e.IsHas = false;
         });
         _firstItem.SetShow(false);
         _lastItem.SetShow(false);
- 
+
+        SetDefaultWorkingItem();
     }
 }
