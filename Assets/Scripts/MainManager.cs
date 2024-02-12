@@ -17,20 +17,17 @@ public class MainManager : MonoBehaviour
 
     private List<ImageWithType> _images = new List<ImageWithType>();
     private List<ItemStore> _itemsStore = new List<ItemStore>();
-    private List<ItemStore> _drawLine = new List<ItemStore>();
     private List<CardItem> spawnedItemsList = new List<CardItem>();
     private LineRenderer line;
+
+    private const float Z_LINE = -0.1f;
 
     private void Awake()
     {
         GetResouece();
         GenerateGrid();
-        Debug.Log(spawnedItemsList.Count);
-        // spawnedItemsList.ForEach(e =>
-        // {
-        //     // e._spriteRenderer.sprite.border.Set(2,2,2,2);
-        //     e._spriteRenderer.color = Color.gray;
-        // });
+
+        GetSuggest();
     }
 
     private void GetResouece()
@@ -97,6 +94,55 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    private void GetSuggest()
+    {
+        var result = new List<ItemStore>();
+        for (var i = 0; i < _itemsStore.Count - _height; i++)
+        {
+            var entrySameRow = _itemsStore[i].TypeImage == _itemsStore[i + 1].TypeImage 
+                               && _itemsStore[i].IsHas 
+                               && _itemsStore[i + 1].IsHas;
+            var entrySameCol = _itemsStore[i].TypeImage == _itemsStore[i + _height].TypeImage 
+                               && _itemsStore[i].IsHas 
+                               && _itemsStore[i + _height].IsHas;
+
+            if (entrySameRow) result.AddRange(new[] { _itemsStore[i], _itemsStore[i + 1] });
+            if (entrySameCol) result.AddRange(new[] { _itemsStore[i], _itemsStore[i + _height] });
+        }
+
+        RenderLineSuggest(result);
+    }
+
+    private void RenderLineSuggest(List<ItemStore> itemStores)
+    {
+        foreach (var itemStore in itemStores)
+        {
+            RenderLineSuggest(itemStore);
+        }
+    }
+    private void RenderLineSuggest(ItemStore itemStore)
+    {
+        var x = itemStore.X;
+        var y = itemStore.Y;
+        
+        Vector3[] points= new[]
+        {
+            new Vector3(x-0.5f,y+0.5f,Z_LINE),
+            new Vector3(x+0.5f,y+0.5f,Z_LINE),
+            new Vector3(x+0.5f,y-0.5f,Z_LINE),
+            new Vector3(x-0.5f,y-0.5f,Z_LINE),
+            new Vector3(x-0.5f,y+0.5f,Z_LINE),
+        };
+        _lineRenderer.positionCount = 5;
+        _lineRenderer.SetPositions(points);
+        
+        line = Instantiate(
+            _lineRenderer,
+            points[0],
+            Quaternion.identity,
+            parentObj);
+    }
+
     public void SetItem(CardItem cardItem)
     {
         cardItem._spriteRenderer.color = Color.grey;
@@ -105,10 +151,13 @@ public class MainManager : MonoBehaviour
 
         if (_firstItem == null)
         {
-            Debug.Log("set first item!" + cardItem.ToString());
+            Debug.Log("Set first item!" + cardItem.ToString());
             _firstItem = cardItem;
             return;
         }
+
+        Debug.Log("Set last item!" + cardItem.ToString());
+        _lastItem = cardItem;
 
         if (_firstItem.Id == cardItem.Id)
         {
@@ -116,11 +165,9 @@ public class MainManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Set last item!" + cardItem.ToString());
-        _lastItem = cardItem;
         if (_firstItem.TypeImage != _lastItem.TypeImage)
         {
-            // Debug.Log("Not same!");
+            Debug.Log("Not same!");
             SetDefaultWorkingItem();
             return;
         }
@@ -142,14 +189,12 @@ public class MainManager : MonoBehaviour
 
         var checkByHorizontal = CheckNoValueByAxis(Axis.Horizontal, itemsNoValue);
 
-        // Debug.Log(checkByVertical + " checkByVertical");
-        // Debug.Log(checkByHorizontal + " checkByHorizontal");
         if (checkByHorizontal)
         {
             Invoke("SetHideWorkingItem", 0.2f);
-            // SetHideWorkingItem();
             return;
         }
+
         SetDefaultWorkingItem();
     }
 
@@ -185,7 +230,7 @@ public class MainManager : MonoBehaviour
             var entryMaxX = CheckNoValueByAxis(axis, itemStores, tempY, YOfMaxX, maxX);
             if (entryMinX && entryMaxX)
             {
-                RenderLine(tempY, axis);
+                RenderLinePass(tempY, axis);
 
                 // Debug.Log(tempY + "////////////");
                 // var drawLine = spawnedItemsList.Where(e =>
@@ -211,7 +256,7 @@ public class MainManager : MonoBehaviour
         return isPass;
     }
 
-    private void RenderLine(float tempY, Axis axis)
+    private void RenderLinePass(float tempY, Axis axis)
     {
         var xOfPoint2 = _firstItem.FlipAxis(axis).x;
         var xOfPoint3 = _lastItem.FlipAxis(axis).x;
@@ -227,16 +272,17 @@ public class MainManager : MonoBehaviour
         Vector3[] points = new[]
         {
             _firstItem.transform.position,
-            new Vector3(xOfPoint2, yOfPoint2, -0.1f),
-            new Vector3(xOfPoint3, yOfPoint3, -0.1f),
+            new Vector3(xOfPoint2, yOfPoint2, Z_LINE),
+            new Vector3(xOfPoint3, yOfPoint3, Z_LINE),
             _lastItem.transform.position
         };
 
         _lineRenderer.positionCount = 4;
-        for (var i = 0; i < points.Length; i++)
-        {
-            _lineRenderer.SetPosition(i, points[i]);
-        }
+        // for (var i = 0; i < points.Length; i++)
+        // {
+        //     _lineRenderer.SetPosition(i, points[i]);
+        // }
+        _lineRenderer.SetPositions(points);
 
         line = Instantiate(
             _lineRenderer,
@@ -248,7 +294,7 @@ public class MainManager : MonoBehaviour
 
     private void RemoveLine()
     {
-        line.positionCount = 0;
+        // line.positionCount = 0;
     }
 
     private bool CheckNoValueByAxis(Axis axis, IEnumerable<ItemStore> itemStores, float minY, float maxY, float x)
@@ -269,8 +315,6 @@ public class MainManager : MonoBehaviour
         _lastItem._spriteRenderer.color = Color.white;
         _firstItem = null;
         _lastItem = null;
-        // spawnedItemsList.ForEach(e => e._spriteRenderer.color = Color.white);
-
     }
 
     private void SetHideWorkingItem()
