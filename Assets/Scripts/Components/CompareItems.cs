@@ -131,10 +131,14 @@ public partial class MainManager
         _spawnedItemsList.ForEach(e =>
         {
             if (e.Id == _firstItem.Id || e.Id == _lastItem.Id)
+            {
                 e.IsHas = false;
+                e.TypeImage = 0;
+                e._spriteRenderer.sprite = null;
+            }
         });
-        _firstItem.SetShow(false);
-        _lastItem.SetShow(false);
+        // _firstItem.SetShow(false);
+        // _lastItem.SetShow(false);
 
         SetDefaultWorkingItem();
         GetSuggest();

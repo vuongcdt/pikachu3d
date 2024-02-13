@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Common;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public partial class MainManager
     private void GetResouece()
     {
         if (_images.Count > 0) return;
-        
+
         var nums = Enumerable.Range(1, 36);
         foreach (var num in nums)
         {
@@ -66,20 +67,22 @@ public partial class MainManager
         // CheckTypeItem();
     }
 
-    private void CheckTypeItem()
+    private void CheckTypeItem(List<CardItem> cardItems)
     {
-        var checkType = _spawnedItemsList
-                .GroupBy(e => e.TypeImage)
-                .Select(e => new
-                {
-                    key = e.Key,
-                    total = e.Count()
-                })
-                .OrderBy(e => e.key)
-            ;
+        var checkType = cardItems
+            .GroupBy(e => e.TypeImage)
+            .Select(e => new
+            {
+                key = e.Key,
+                total = e.Count()
+            })
+            .OrderBy(e => e.key);
+        string inLog = "";
         foreach (var i in checkType)
         {
-            // Debug.Log(i.key + "____" + i.total + "////////////");
+            inLog += i.key + "-" + i.total + "; ";
         }
+
+        Debug.Log(inLog);
     }
 }

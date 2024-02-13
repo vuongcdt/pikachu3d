@@ -8,8 +8,8 @@ public partial class MainManager
     {
         _suggetItems = new List<CardItem>();
 
-        // SuggetTogether();
-        SuggetNotTogether();
+        SuggetTogether();
+        // SuggetNotTogether();
         if (_suggetItems.Count > 0)
             RenderLineSuggest();
         else RerenderGrid();
