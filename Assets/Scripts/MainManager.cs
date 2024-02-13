@@ -11,6 +11,7 @@ public partial class MainManager : MonoBehaviour
     [SerializeField] private LineRenderer _lineRenderer;
 
     private CardItem _firstItem, _lastItem;
+    private bool _isPassItem = false;
 
     private List<ImageWithType> _images = new List<ImageWithType>();
     private readonly List<CardItem> _spawnedItemsList = new List<CardItem>();
@@ -28,6 +29,7 @@ public partial class MainManager : MonoBehaviour
 
     public void SetItem(CardItem cardItem)
     {
+        ClearInvoke();
         cardItem._spriteRenderer.color = Color.grey;
 
         cardItem.IfIsNull(SetDefaultWorkingItem);
@@ -54,6 +56,8 @@ public partial class MainManager : MonoBehaviour
             SetDefaultWorkingItem();
             return;
         }
+
+        _isPassItem = true;
         CompareItems(_firstItem, _lastItem);
     }
 

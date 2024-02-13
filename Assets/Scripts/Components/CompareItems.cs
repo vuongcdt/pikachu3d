@@ -13,18 +13,18 @@ public partial class MainManager
         var checkByVertical = CheckNoValueByAxis(Axis.Vertical, itemsNoValue, firstItem, lastItem);
         if (checkByVertical)
         {
-            Invoke(nameof(SetHideWorkingItem), 0.2f);
+            if(_isPassItem) Invoke(nameof(SetHideWorkingItem), 0.2f);
             return true;
         }
-
+        
         var checkByHorizontal = CheckNoValueByAxis(Axis.Horizontal, itemsNoValue, firstItem, lastItem);
-
         if (checkByHorizontal)
         {
-            Invoke(nameof(SetHideWorkingItem), 0.2f);
+            if(_isPassItem) Invoke(nameof(SetHideWorkingItem), 0.2f);
             return true;
         }
-        SetDefaultWorkingItem();
+        
+        if(_isPassItem) SetDefaultWorkingItem();
         return false;
     }
 
@@ -63,8 +63,11 @@ public partial class MainManager
             var entryMaxX = CheckNoValueByAxis(axis, itemsNoValue, tempY, yOfMaxX, maxX);
             if (entryMinX && entryMaxX)
             {
-                RemoveLine();
-                RenderLinePass(tempY, axis);
+                if(_isPassItem)
+                {
+                    RemoveLine();
+                    RenderLinePass(tempY, axis);
+                }
                 isPass = true;
                 break;
             }

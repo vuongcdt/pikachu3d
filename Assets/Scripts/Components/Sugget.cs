@@ -6,14 +6,17 @@ public partial class MainManager
 {
     private void GetSuggest()
     {
-        return;
+        _suggetItems = new List<CardItem>();
+
         SuggetTogether();
         SuggetNotTogether();
+        if (_suggetItems.Count > 0)
+            RenderLineSuggest();
+        else Debug.Log(_suggetItems.Count + "11111111111");
     }
 
     private void SuggetTogether()
     {
-        var result = new List<CardItem>();
         for (var i = 0; i < _spawnedItemsList.Count - _height; i++)
         {
             var entryTogetherRow = _spawnedItemsList[i].TypeImage == _spawnedItemsList[i + 1].TypeImage
@@ -22,27 +25,26 @@ public partial class MainManager
             var entryTogetherCol = _spawnedItemsList[i].TypeImage == _spawnedItemsList[i + _height].TypeImage
                                    && _spawnedItemsList[i].IsHas
                                    && _spawnedItemsList[i + _height].IsHas;
-        
+
             if (entryTogetherRow)
             {
-                result.AddRange(new[] { _spawnedItemsList[i], _spawnedItemsList[i + 1] });
+                _suggetItems.AddRange(new[] { _spawnedItemsList[i], _spawnedItemsList[i + 1] });
                 break;
             }
-        
+
             if (entryTogetherCol)
             {
-                result.AddRange(new[] { _spawnedItemsList[i], _spawnedItemsList[i + _height] });
+                _suggetItems.AddRange(new[] { _spawnedItemsList[i], _spawnedItemsList[i + _height] });
                 break;
             }
         }
-
-        if (result.Count > 0)
-            RenderLineSuggest(result);
     }
 
     private void SuggetNotTogether()
     {
-        _suggetItems = new List<CardItem>();
+        if (_suggetItems.Count > 0) return;
+
+        _isPassItem = false;
         var canCompareList = new List<CardItem>();
         var canNotCompareList = new List<CardItem>();
 
@@ -84,17 +86,40 @@ public partial class MainManager
                         break;
                     }
                 }
+
                 if (_suggetItems.Count > 0) break;
             }
+
             if (_suggetItems.Count > 0) break;
         }
     }
 
-    private void RenderLineSuggest(List<CardItem> itemStores)
+    private void RenderLineSuggest()
     {
-        foreach (var itemStore in itemStores)
+        foreach (var itemStore in _suggetItems)
         {
             RenderLineSuggest(itemStore);
+        }
+        _suggetItems[0]._spriteRenderer.color = Color.grey;
+        InvokeRepeating(nameof(ToggleColorCard), 0,0.2f);
+        Invoke(nameof(ClearInvoke),2);
+    }
+
+    private void ClearInvoke()
+    {
+        CancelInvoke();
+        foreach (var cardItem in _suggetItems)
+        {
+            cardItem._spriteRenderer.color = Color.white ;
+        }
+    }
+    private void ToggleColorCard()
+    {
+        foreach (var cardItem in _suggetItems)
+        {
+            cardItem._spriteRenderer.color = cardItem._spriteRenderer.color == Color.grey 
+                ? Color.white 
+                : Color.gray;
         }
     }
 
