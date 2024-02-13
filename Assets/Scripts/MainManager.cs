@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using Common;
-using Unity.VisualScripting;
-using Random = UnityEngine.Random;
 
 public partial class MainManager : MonoBehaviour
 {
@@ -18,6 +15,7 @@ public partial class MainManager : MonoBehaviour
     private List<ImageWithType> _images = new List<ImageWithType>();
     private readonly List<ItemStore> _itemsStore = new List<ItemStore>();
     private readonly List<CardItem> _spawnedItemsList = new List<CardItem>();
+    private List<CardItem> _suggetItems = new List<CardItem>();
     private readonly List<LineRenderer> _lines = new List<LineRenderer>();
 
     private const float ZLine = -0.01f;

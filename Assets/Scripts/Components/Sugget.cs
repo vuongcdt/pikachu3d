@@ -7,45 +7,62 @@ public partial class MainManager
 {
     private void GetSuggest()
     {
+        SuggetTogether();
+        SuggetNotTogether();
+    }
+
+    private void SuggetTogether()
+    {
         var result = new List<ItemStore>();
         for (var i = 0; i < _itemsStore.Count - _height; i++)
         {
-            var entrySameRow = _itemsStore[i].TypeImage == _itemsStore[i + 1].TypeImage
-                               && _itemsStore[i].IsHas
-                               && _itemsStore[i + 1].IsHas;
-            var entrySameCol = _itemsStore[i].TypeImage == _itemsStore[i + _height].TypeImage
-                               && _itemsStore[i].IsHas
-                               && _itemsStore[i + _height].IsHas;
+            var entryTogetherRow = _itemsStore[i].TypeImage == _itemsStore[i + 1].TypeImage
+                                   && _itemsStore[i].IsHas
+                                   && _itemsStore[i + 1].IsHas;
+            var entryTogetherCol = _itemsStore[i].TypeImage == _itemsStore[i + _height].TypeImage
+                                   && _itemsStore[i].IsHas
+                                   && _itemsStore[i + _height].IsHas;
 
-            if (entrySameRow)
+            if (entryTogetherRow)
             {
                 result.AddRange(new[] { _itemsStore[i], _itemsStore[i + 1] });
                 break;
             }
 
-            if (entrySameCol)
+            if (entryTogetherCol)
             {
                 result.AddRange(new[] { _itemsStore[i], _itemsStore[i + _height] });
                 break;
             }
         }
 
-        var canCompareList = new List<ItemStore>();
-        var canNotCompareList = new List<ItemStore>();
+        if (result.Count > 0)
+            RenderLineSuggest(result);
+    }
 
-        for (var i = _height; i < _itemsStore.Count - _height; i++)
+    private void SuggetNotTogether()
+    {
+        _suggetItems = new List<CardItem>();
+        var canCompareList = new List<CardItem>();
+        var canNotCompareList = new List<CardItem>();
+        Debug.Log(_spawnedItemsList.Count+"XXXXXXXXXXXXXXXXXXXXX");
+
+        for (var i = _height; i < _spawnedItemsList.Count - _height; i++)
         {
-            if (i % _height == 0 || i % _height == _height || !_itemsStore[i].IsHas) continue;
-            if (_itemsStore[i + 1].IsHas
-                && _itemsStore[i - 1].IsHas
-                && _itemsStore[i + _height].IsHas
-                && _itemsStore[i - _height].IsHas)
-                canNotCompareList.Add(_itemsStore[i]);
+            if (i % _height == 0 || i % _height == _height || !_spawnedItemsList[i].IsHas) continue;
+            if (_spawnedItemsList[i + 1].IsHas
+                && _spawnedItemsList[i - 1].IsHas
+                && _spawnedItemsList[i + _height].IsHas
+                && _spawnedItemsList[i - _height].IsHas)
+                canNotCompareList.Add(_spawnedItemsList[i]);
             else
-                canCompareList.Add(_itemsStore[i]);
+                canCompareList.Add(_spawnedItemsList[i]);
         }
 
-        var res = canCompareList
+        Debug.Log(canCompareList.Count+"______________________");
+        Debug.Log(canNotCompareList.Count+"************************");
+
+        var compareList = canCompareList
             .GroupBy(e => e.TypeImage)
             .Select(e => new
             {
@@ -54,18 +71,30 @@ public partial class MainManager
                 ItemsList = e.ToList()
             })
             .Where(e => e.Total > 1);
+        Debug.Log(compareList.Count()+"+++++++++++++++++");
 
-        foreach (var re in res)
+        foreach (var compare in compareList)
         {
-            Debug.Log(re.Key + "__" + re.Total);
+            Debug.Log(compare.Key + "__" + compare.Total);
+            var cardItemsList = compare.ItemsList;
+
+            for (var i = 0; i < cardItemsList.Count; i++)
+            {
+                for (var j = i + 1; j < cardItemsList.Count; j++)
+                {
+                    var entry = CompareItems(cardItemsList[i], cardItemsList[j]);
+                    if (entry)
+                    {
+                        _suggetItems.AddRange(new[] { cardItemsList[i], cardItemsList[j] });
+                        break;
+                    }
+                }
+                if (_suggetItems.Count > 0) break;
+            }
+            if (_suggetItems.Count > 0) break;
         }
 
-        Debug.Log(res.Count() + "??????????");
-        if (result.Count > 0)
-        {
-            RenderLineSuggest(result);
-            return;
-        }
+        Debug.Log(_suggetItems.Count() + "??????????");
     }
 
     private void RenderLineSuggest(List<ItemStore> itemStores)
@@ -82,7 +111,7 @@ public partial class MainManager
         var y = itemStore.Y;
 
         var ponitStart = new Vector3(x - 0.5f, y + 0.5f, ZLine);
-        
+
         Vector3[] points = new[]
         {
             ponitStart,

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public partial class MainManager
 {
-    private void CompareItems(CardItem firstItem, CardItem lastItem)
+    private bool CompareItems(CardItem firstItem, CardItem lastItem)
     {
         IEnumerable<ItemStore> itemsNoValue = _itemsStore
             .Where(e => !e.IsHas || e.Id == lastItem.Id || e.Id == firstItem.Id);
@@ -14,7 +14,7 @@ public partial class MainManager
         if (checkByVertical)
         {
             Invoke(nameof(SetHideWorkingItem), 0.2f);
-            return;
+            return true;
         }
 
         var checkByHorizontal = CheckNoValueByAxis(Axis.Horizontal, itemsNoValue, firstItem, lastItem);
@@ -22,10 +22,11 @@ public partial class MainManager
         if (checkByHorizontal)
         {
             Invoke(nameof(SetHideWorkingItem), 0.2f);
-            return;
+            return true;
         }
 
         SetDefaultWorkingItem();
+        return false;
     }
 
     private bool CheckNoValueByAxis(
@@ -118,6 +119,7 @@ public partial class MainManager
             parentObj));
         Invoke(nameof(RemoveLine), 0.2f);
     }
+
     private void SetHideWorkingItem()
     {
         _itemsStore.ForEach(e =>
@@ -131,10 +133,9 @@ public partial class MainManager
         SetDefaultWorkingItem();
         GetSuggest();
     }
-    
+
     private void RemoveLine()
     {
         _lines.ForEach(e => e.positionCount = 0);
     }
-
 }
