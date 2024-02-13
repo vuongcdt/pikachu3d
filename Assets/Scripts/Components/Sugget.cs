@@ -14,27 +14,27 @@ public partial class MainManager
     private void SuggetTogether()
     {
         var result = new List<ItemStore>();
-        for (var i = 0; i < _itemsStore.Count - _height; i++)
-        {
-            var entryTogetherRow = _itemsStore[i].TypeImage == _itemsStore[i + 1].TypeImage
-                                   && _itemsStore[i].IsHas
-                                   && _itemsStore[i + 1].IsHas;
-            var entryTogetherCol = _itemsStore[i].TypeImage == _itemsStore[i + _height].TypeImage
-                                   && _itemsStore[i].IsHas
-                                   && _itemsStore[i + _height].IsHas;
-
-            if (entryTogetherRow)
-            {
-                result.AddRange(new[] { _itemsStore[i], _itemsStore[i + 1] });
-                break;
-            }
-
-            if (entryTogetherCol)
-            {
-                result.AddRange(new[] { _itemsStore[i], _itemsStore[i + _height] });
-                break;
-            }
-        }
+        // for (var i = 0; i < _itemsStore.Count - _height; i++)
+        // {
+        //     var entryTogetherRow = _itemsStore[i].TypeImage == _itemsStore[i + 1].TypeImage
+        //                            && _itemsStore[i].IsHas
+        //                            && _itemsStore[i + 1].IsHas;
+        //     var entryTogetherCol = _itemsStore[i].TypeImage == _itemsStore[i + _height].TypeImage
+        //                            && _itemsStore[i].IsHas
+        //                            && _itemsStore[i + _height].IsHas;
+        //
+        //     if (entryTogetherRow)
+        //     {
+        //         result.AddRange(new[] { _itemsStore[i], _itemsStore[i + 1] });
+        //         break;
+        //     }
+        //
+        //     if (entryTogetherCol)
+        //     {
+        //         result.AddRange(new[] { _itemsStore[i], _itemsStore[i + _height] });
+        //         break;
+        //     }
+        // }
 
         if (result.Count > 0)
             RenderLineSuggest(result);
@@ -45,7 +45,7 @@ public partial class MainManager
         _suggetItems = new List<CardItem>();
         var canCompareList = new List<CardItem>();
         var canNotCompareList = new List<CardItem>();
-        Debug.Log(_spawnedItemsList.Count+"XXXXXXXXXXXXXXXXXXXXX");
+        // Debug.Log(_spawnedItemsList.Count+"XXXXXXXXXXXXXXXXXXXXX");
 
         for (var i = _height; i < _spawnedItemsList.Count - _height; i++)
         {
@@ -59,8 +59,8 @@ public partial class MainManager
                 canCompareList.Add(_spawnedItemsList[i]);
         }
 
-        Debug.Log(canCompareList.Count+"______________________");
-        Debug.Log(canNotCompareList.Count+"************************");
+        // Debug.Log(canCompareList.Count+"______________________");
+        // Debug.Log(canNotCompareList.Count+"************************");
 
         var compareList = canCompareList
             .GroupBy(e => e.TypeImage)
@@ -71,7 +71,7 @@ public partial class MainManager
                 ItemsList = e.ToList()
             })
             .Where(e => e.Total > 1);
-        Debug.Log(compareList.Count()+"+++++++++++++++++");
+        // Debug.Log(compareList.Count()+"+++++++++++++++++");
 
         foreach (var compare in compareList)
         {
@@ -94,7 +94,7 @@ public partial class MainManager
             if (_suggetItems.Count > 0) break;
         }
 
-        Debug.Log(_suggetItems.Count() + "??????????");
+        // Debug.Log(_suggetItems.Count() + "??????????");
     }
 
     private void RenderLineSuggest(List<ItemStore> itemStores)

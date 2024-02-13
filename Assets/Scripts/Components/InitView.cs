@@ -53,16 +53,19 @@ public partial class MainManager
                 spawnedItem.name = $"Card Item {x} {y} {imageWithId.TypeImage}";
 
                 spawnedItem.Init(this, imageWithId);
+                spawnedItem.IsHas = isHas;
+                spawnedItem.TypeImage = imageWithId.TypeImage;
+                spawnedItem.Id = index;
                 
                 var position = spawnedItem.transform.position;
                 
-                _itemsStore.Add(new ItemStore(
-                    position.x,
-                    position.y,
-                    index,
-                    imageWithId.TypeImage,
-                    isHas
-                ));
+                // _itemsStore.Add(new ItemStore(
+                //     position.x,
+                //     position.y,
+                //     index,
+                //     imageWithId.TypeImage,
+                //     isHas
+                // ));
 
                 _spawnedItemsList.Add(spawnedItem);
 
