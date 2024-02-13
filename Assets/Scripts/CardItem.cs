@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class CardItem : MonoBehaviour
 {
-    // public Props Property = new Props();
     public int Id;
     public int TypeImage;
     public bool IsHas;

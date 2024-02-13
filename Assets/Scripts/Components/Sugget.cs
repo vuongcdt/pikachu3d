@@ -12,7 +12,7 @@ public partial class MainManager
         SuggetNotTogether();
         if (_suggetItems.Count > 0)
             RenderLineSuggest();
-        else Debug.Log(_suggetItems.Count + "11111111111");
+        else RerenderGrid();
     }
 
     private void SuggetTogether()
@@ -100,9 +100,10 @@ public partial class MainManager
         {
             RenderLineSuggest(itemStore);
         }
+
         _suggetItems[0]._spriteRenderer.color = Color.grey;
-        InvokeRepeating(nameof(ToggleColorCard), 0,0.2f);
-        Invoke(nameof(ClearInvoke),2);
+        InvokeRepeating(nameof(ToggleColorCard), 0, 0.2f);
+        Invoke(nameof(ClearInvoke), 1.2f);
     }
 
     private void ClearInvoke()
@@ -110,15 +111,16 @@ public partial class MainManager
         CancelInvoke();
         foreach (var cardItem in _suggetItems)
         {
-            cardItem._spriteRenderer.color = Color.white ;
+            cardItem._spriteRenderer.color = Color.white;
         }
     }
+
     private void ToggleColorCard()
     {
         foreach (var cardItem in _suggetItems)
         {
-            cardItem._spriteRenderer.color = cardItem._spriteRenderer.color == Color.grey 
-                ? Color.white 
+            cardItem._spriteRenderer.color = cardItem._spriteRenderer.color == Color.grey
+                ? Color.white
                 : Color.gray;
         }
     }
