@@ -13,7 +13,6 @@ public partial class MainManager : MonoBehaviour
     private CardItem _firstItem, _lastItem;
 
     private List<ImageWithType> _images = new List<ImageWithType>();
-    // private readonly List<ItemStore> _itemsStore = new List<ItemStore>();
     private readonly List<CardItem> _spawnedItemsList = new List<CardItem>();
     private List<CardItem> _suggetItems = new List<CardItem>();
     private readonly List<LineRenderer> _lines = new List<LineRenderer>();
@@ -24,7 +23,7 @@ public partial class MainManager : MonoBehaviour
     {
         GetResouece();
         GenerateGrid();
-        // GetSuggest();
+        GetSuggest();
     }
 
     public void SetItem(CardItem cardItem)
@@ -55,7 +54,6 @@ public partial class MainManager : MonoBehaviour
             SetDefaultWorkingItem();
             return;
         }
-
         CompareItems(_firstItem, _lastItem);
     }
 

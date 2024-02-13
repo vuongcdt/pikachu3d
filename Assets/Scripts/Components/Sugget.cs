@@ -1,40 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Common;
 using UnityEngine;
 
 public partial class MainManager
 {
     private void GetSuggest()
     {
+        return;
         SuggetTogether();
         SuggetNotTogether();
     }
 
     private void SuggetTogether()
     {
-        var result = new List<ItemStore>();
-        // for (var i = 0; i < _itemsStore.Count - _height; i++)
-        // {
-        //     var entryTogetherRow = _itemsStore[i].TypeImage == _itemsStore[i + 1].TypeImage
-        //                            && _itemsStore[i].IsHas
-        //                            && _itemsStore[i + 1].IsHas;
-        //     var entryTogetherCol = _itemsStore[i].TypeImage == _itemsStore[i + _height].TypeImage
-        //                            && _itemsStore[i].IsHas
-        //                            && _itemsStore[i + _height].IsHas;
-        //
-        //     if (entryTogetherRow)
-        //     {
-        //         result.AddRange(new[] { _itemsStore[i], _itemsStore[i + 1] });
-        //         break;
-        //     }
-        //
-        //     if (entryTogetherCol)
-        //     {
-        //         result.AddRange(new[] { _itemsStore[i], _itemsStore[i + _height] });
-        //         break;
-        //     }
-        // }
+        var result = new List<CardItem>();
+        for (var i = 0; i < _spawnedItemsList.Count - _height; i++)
+        {
+            var entryTogetherRow = _spawnedItemsList[i].TypeImage == _spawnedItemsList[i + 1].TypeImage
+                                   && _spawnedItemsList[i].IsHas
+                                   && _spawnedItemsList[i + 1].IsHas;
+            var entryTogetherCol = _spawnedItemsList[i].TypeImage == _spawnedItemsList[i + _height].TypeImage
+                                   && _spawnedItemsList[i].IsHas
+                                   && _spawnedItemsList[i + _height].IsHas;
+        
+            if (entryTogetherRow)
+            {
+                result.AddRange(new[] { _spawnedItemsList[i], _spawnedItemsList[i + 1] });
+                break;
+            }
+        
+            if (entryTogetherCol)
+            {
+                result.AddRange(new[] { _spawnedItemsList[i], _spawnedItemsList[i + _height] });
+                break;
+            }
+        }
 
         if (result.Count > 0)
             RenderLineSuggest(result);
@@ -45,7 +45,6 @@ public partial class MainManager
         _suggetItems = new List<CardItem>();
         var canCompareList = new List<CardItem>();
         var canNotCompareList = new List<CardItem>();
-        // Debug.Log(_spawnedItemsList.Count+"XXXXXXXXXXXXXXXXXXXXX");
 
         for (var i = _height; i < _spawnedItemsList.Count - _height; i++)
         {
@@ -59,9 +58,6 @@ public partial class MainManager
                 canCompareList.Add(_spawnedItemsList[i]);
         }
 
-        // Debug.Log(canCompareList.Count+"______________________");
-        // Debug.Log(canNotCompareList.Count+"************************");
-
         var compareList = canCompareList
             .GroupBy(e => e.TypeImage)
             .Select(e => new
@@ -71,7 +67,6 @@ public partial class MainManager
                 ItemsList = e.ToList()
             })
             .Where(e => e.Total > 1);
-        // Debug.Log(compareList.Count()+"+++++++++++++++++");
 
         foreach (var compare in compareList)
         {
@@ -93,11 +88,9 @@ public partial class MainManager
             }
             if (_suggetItems.Count > 0) break;
         }
-
-        // Debug.Log(_suggetItems.Count() + "??????????");
     }
 
-    private void RenderLineSuggest(List<ItemStore> itemStores)
+    private void RenderLineSuggest(List<CardItem> itemStores)
     {
         foreach (var itemStore in itemStores)
         {
@@ -105,10 +98,11 @@ public partial class MainManager
         }
     }
 
-    private void RenderLineSuggest(ItemStore itemStore)
+    private void RenderLineSuggest(CardItem itemStore)
     {
-        var x = itemStore.X;
-        var y = itemStore.Y;
+        var position = itemStore.transform.position;
+        var x = position.x;
+        var y = position.y;
 
         var ponitStart = new Vector3(x - 0.5f, y + 0.5f, ZLine);
 

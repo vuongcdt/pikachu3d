@@ -45,7 +45,6 @@ public partial class MainManager
                     Quaternion.identity,
                     parentObj);
 
-
                 var isHas = !(y == 0 || y == _height - 1 || x == 0 || x == _width - 1);
 
                 var imageWithId = isHas ? _images[count] : new ImageWithType();
@@ -56,16 +55,6 @@ public partial class MainManager
                 spawnedItem.IsHas = isHas;
                 spawnedItem.TypeImage = imageWithId.TypeImage;
                 spawnedItem.Id = index;
-                
-                var position = spawnedItem.transform.position;
-                
-                // _itemsStore.Add(new ItemStore(
-                //     position.x,
-                //     position.y,
-                //     index,
-                //     imageWithId.TypeImage,
-                //     isHas
-                // ));
 
                 _spawnedItemsList.Add(spawnedItem);
 

@@ -9,8 +9,6 @@ public partial class MainManager
     {
         var itemsNoValue = _spawnedItemsList
             .Where(e => !e.IsHas || e.Id == lastItem.Id || e.Id == firstItem.Id);
-        // IEnumerable<ItemStore> itemsNoValue = _itemsStore
-        //     .Where(e => !e.IsHas || e.Id == lastItem.Id || e.Id == firstItem.Id);
 
         var checkByVertical = CheckNoValueByAxis(Axis.Vertical, itemsNoValue, firstItem, lastItem);
         if (checkByVertical)
@@ -26,16 +24,10 @@ public partial class MainManager
             Invoke(nameof(SetHideWorkingItem), 0.2f);
             return true;
         }
-
         SetDefaultWorkingItem();
         return false;
     }
 
-    // private bool CheckNoValueByAxis(
-    //     Axis axis,
-    //     IEnumerable<ItemStore> itemsNoValue,
-    //     CardItem firstItem,
-    //     CardItem lastItem)
     private bool CheckNoValueByAxis(
         Axis axis,
         IEnumerable<CardItem> itemsNoValue,
@@ -76,14 +68,11 @@ public partial class MainManager
                 isPass = true;
                 break;
             }
-
             Debug.Log(isPass + "isPass");
         }
-
         return isPass;
     }
 
-    // private bool CheckNoValueByAxis(Axis axis, IEnumerable<ItemStore> itemsNoValue, float minY, float maxY, float x)
     private bool CheckNoValueByAxis(Axis axis, IEnumerable<CardItem> itemsNoValue, float minY, float maxY, float x)
     {
         if (minY > maxY) (minY, maxY) = (maxY, minY);
@@ -130,11 +119,6 @@ public partial class MainManager
 
     private void SetHideWorkingItem()
     {
-        // _itemsStore.ForEach(e =>
-        // {
-        //     if (e.Id == _firstItem.Id || e.Id == _lastItem.Id)
-        //         e.IsHas = false;
-        // });
          _spawnedItemsList.ForEach(e =>
         {
             if (e.Id == _firstItem.Id || e.Id == _lastItem.Id)
@@ -144,7 +128,7 @@ public partial class MainManager
         _lastItem.SetShow(false);
 
         SetDefaultWorkingItem();
-        // GetSuggest();
+        GetSuggest();
     }
 
     private void RemoveLine()
