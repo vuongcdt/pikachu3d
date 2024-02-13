@@ -7,6 +7,7 @@ public partial class MainManager
     private void GetResouece()
     {
         if (_images.Count > 0) return;
+        
         var nums = Enumerable.Range(1, 36);
         foreach (var num in nums)
         {
@@ -60,6 +61,25 @@ public partial class MainManager
 
                 if (isHas) count++;
             }
+        }
+
+        // CheckTypeItem();
+    }
+
+    private void CheckTypeItem()
+    {
+        var checkType = _spawnedItemsList
+                .GroupBy(e => e.TypeImage)
+                .Select(e => new
+                {
+                    key = e.Key,
+                    total = e.Count()
+                })
+                .OrderBy(e => e.key)
+            ;
+        foreach (var i in checkType)
+        {
+            // Debug.Log(i.key + "____" + i.total + "////////////");
         }
     }
 }

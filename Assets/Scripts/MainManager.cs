@@ -36,12 +36,12 @@ public partial class MainManager : MonoBehaviour
 
         if (_firstItem == null)
         {
-            Debug.Log("Set first item!" + cardItem.ToString());
+            // Debug.Log("Set first item!" + cardItem.ToString());
             _firstItem = cardItem;
             return;
         }
 
-        Debug.Log("Set last item!" + cardItem.ToString());
+        // Debug.Log("Set last item!" + cardItem.ToString());
         _lastItem = cardItem;
 
         if (_firstItem.Id == cardItem.Id)
@@ -52,7 +52,7 @@ public partial class MainManager : MonoBehaviour
 
         if (_firstItem.TypeImage != _lastItem.TypeImage)
         {
-            Debug.Log("Not same!");
+            // Debug.Log("Not same!");
             SetDefaultWorkingItem();
             return;
         }

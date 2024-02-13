@@ -8,8 +8,11 @@ public partial class MainManager
         var hasItemList = _spawnedItemsList
             .Where(e => e.IsHas)
             .ToArray();
-        var hasItemListRamdom = hasItemList
-            .OrderBy(e => Random.Range(0, _width * _height))
+        // CheckTypeItem();
+
+        var hasItemListRamdom = _spawnedItemsList
+            .Where(e => e.IsHas)
+            .OrderBy(e => Random.Range(0, hasItemList.Count()))
             .ToArray();
         
         for (var i = 0; i < hasItemList.Length; i++)
@@ -17,5 +20,6 @@ public partial class MainManager
             hasItemList[i]._spriteRenderer.sprite = hasItemListRamdom[i]._spriteRenderer.sprite;
             hasItemList[i].TypeImage = hasItemListRamdom[i].TypeImage;
         }
+        
     }
 }

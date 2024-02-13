@@ -8,7 +8,7 @@ public partial class MainManager
     {
         _suggetItems = new List<CardItem>();
 
-        SuggetTogether();
+        // SuggetTogether();
         SuggetNotTogether();
         if (_suggetItems.Count > 0)
             RenderLineSuggest();
@@ -51,13 +51,18 @@ public partial class MainManager
         for (var i = _height; i < _spawnedItemsList.Count - _height; i++)
         {
             if (i % _height == 0 || i % _height == _height || !_spawnedItemsList[i].IsHas) continue;
+            
             if (_spawnedItemsList[i + 1].IsHas
                 && _spawnedItemsList[i - 1].IsHas
                 && _spawnedItemsList[i + _height].IsHas
                 && _spawnedItemsList[i - _height].IsHas)
+            {
                 canNotCompareList.Add(_spawnedItemsList[i]);
+            }
             else
+            {
                 canCompareList.Add(_spawnedItemsList[i]);
+            }
         }
 
         var compareList = canCompareList
@@ -72,7 +77,7 @@ public partial class MainManager
 
         foreach (var compare in compareList)
         {
-            Debug.Log(compare.Key + "__" + compare.Total);
+            // Debug.Log(compare.Key + "__" + compare.Total);
             var cardItemsList = compare.ItemsList;
 
             for (var i = 0; i < cardItemsList.Count; i++)
@@ -103,7 +108,7 @@ public partial class MainManager
 
         _suggetItems[0]._spriteRenderer.color = Color.grey;
         InvokeRepeating(nameof(ToggleColorCard), 0, 0.2f);
-        Invoke(nameof(ClearInvoke), 1.2f);
+        Invoke(nameof(ClearInvoke), 0.5f);
     }
 
     private void ClearInvoke()

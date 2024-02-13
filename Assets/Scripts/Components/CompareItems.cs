@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common;
 using UnityEngine;
@@ -13,18 +14,18 @@ public partial class MainManager
         var checkByVertical = CheckNoValueByAxis(Axis.Vertical, itemsNoValue, firstItem, lastItem);
         if (checkByVertical)
         {
-            if(_isPassItem) Invoke(nameof(SetHideWorkingItem), 0.2f);
+            if (_isPassItem) Invoke(nameof(SetHideWorkingItem), 0.2f);
             return true;
         }
-        
+
         var checkByHorizontal = CheckNoValueByAxis(Axis.Horizontal, itemsNoValue, firstItem, lastItem);
         if (checkByHorizontal)
         {
-            if(_isPassItem) Invoke(nameof(SetHideWorkingItem), 0.2f);
+            if (_isPassItem) Invoke(nameof(SetHideWorkingItem), 0.2f);
             return true;
         }
-        
-        if(_isPassItem) SetDefaultWorkingItem();
+
+        if (_isPassItem) SetDefaultWorkingItem();
         return false;
     }
 
@@ -53,7 +54,8 @@ public partial class MainManager
         var checkVertical = itemsNoValue
             .GroupBy(e => e.FlipAxis(axis).y)
             .Where(e => e.Count() == distance + 1)
-            .Select(e => e.Key);
+            .Select(e => e.Key)
+            .OrderBy(e => Math.Abs((yOfMaxX + yOfMinX) / 2 - e));
 
         var isPass = false;
 
@@ -63,22 +65,25 @@ public partial class MainManager
             var entryMaxX = CheckNoValueByAxis(axis, itemsNoValue, tempY, yOfMaxX, maxX);
             if (entryMinX && entryMaxX)
             {
-                if(_isPassItem)
+                if (_isPassItem)
                 {
                     RemoveLine();
                     RenderLinePass(tempY, axis);
                 }
+
                 isPass = true;
                 break;
             }
-            Debug.Log(isPass + "isPass");
+            // Debug.Log(isPass + "isPass");
         }
+
         return isPass;
     }
 
     private bool CheckNoValueByAxis(Axis axis, IEnumerable<CardItem> itemsNoValue, float minY, float maxY, float x)
     {
         if (minY > maxY) (minY, maxY) = (maxY, minY);
+        
         var distance = (int)(maxY - minY) + 1;
 
         var totalCard = itemsNoValue
@@ -96,7 +101,8 @@ public partial class MainManager
         var yOfPoint3 = tempY;
         if (axis == Axis.Horizontal)
         {
-            xOfPoint2 = xOfPoint3 = tempY;
+            xOfPoint2 = tempY;
+            xOfPoint3 = tempY;
             yOfPoint2 = _firstItem.FlipAxis(axis).x;
             yOfPoint3 = _lastItem.FlipAxis(axis).x;
         }
@@ -122,7 +128,7 @@ public partial class MainManager
 
     private void SetHideWorkingItem()
     {
-         _spawnedItemsList.ForEach(e =>
+        _spawnedItemsList.ForEach(e =>
         {
             if (e.Id == _firstItem.Id || e.Id == _lastItem.Id)
                 e.IsHas = false;
