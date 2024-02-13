@@ -5,21 +5,21 @@ public partial class MainManager
 {
     private void RerenderGrid()
     {
-        CheckTypeItem(_spawnedItemsList);
-        Debug.Log(_spawnedItemsList.Count(e=>e.IsHas));
+        // CheckTypeItem(_spawnedItemsList);
+        // Debug.Log(_spawnedItemsList.Count(e=>e.IsHas));
         
         var hasItemList = _spawnedItemsList
             .Where(e => e.IsHas)
             .ToList();
-        CheckTypeItem(hasItemList);
-        Debug.Log(hasItemList.Count());
+        // CheckTypeItem(hasItemList);
+        // Debug.Log(hasItemList.Count());
         
         var hasItemListRamdom = _spawnedItemsList
             .Where(e => e.IsHas)
             .OrderBy(e => Random.Range(0, _width * _height))
             .ToList();
-        CheckTypeItem(hasItemListRamdom);
-        Debug.Log(hasItemListRamdom.Count);
+        // CheckTypeItem(hasItemListRamdom);
+        // Debug.Log(hasItemListRamdom.Count);
         
         // for (var i = 0; i < hasItemList.Count(); i++)
         // {
@@ -38,7 +38,7 @@ public partial class MainManager
             }
         }
 
-        CheckTypeItem(_spawnedItemsList);
-        Debug.Log(_spawnedItemsList.Count(e=>e.IsHas));
+        // CheckTypeItem(_spawnedItemsList);
+        // Debug.Log(_spawnedItemsList.Count(e=>e.IsHas));
     }
 }

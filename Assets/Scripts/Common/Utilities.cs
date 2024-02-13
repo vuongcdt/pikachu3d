@@ -24,7 +24,7 @@ namespace Common
         
         public static void  IfIsNull(this CardItem cardItem,Action method)
         {
-            if (cardItem._spriteRenderer.IsUnityNull())
+            if (cardItem._spriteRenderer.IsUnityNull() || !cardItem.IsHas)
                 method();
         }
     }

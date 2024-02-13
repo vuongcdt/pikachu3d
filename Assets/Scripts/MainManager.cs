@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Common;
+using UnityEngine.UI;
 
 public partial class MainManager : MonoBehaviour
 {
@@ -9,9 +11,12 @@ public partial class MainManager : MonoBehaviour
     [SerializeField] private Transform parentObj;
     [SerializeField] private CardItem _cardItem;
     [SerializeField] private LineRenderer _lineRenderer;
+    [SerializeField] public Button _suggetBtn;
+    [SerializeField] public Text _scoreText;
 
     private CardItem _firstItem, _lastItem;
     private bool _isPassItem = false;
+    private int _score;
 
     private List<ImageWithType> _images = new List<ImageWithType>();
     private readonly List<CardItem> _spawnedItemsList = new List<CardItem>();
@@ -24,7 +29,21 @@ public partial class MainManager : MonoBehaviour
     {
         GetResouece();
         GenerateGrid();
-        GetSuggest();
+    }
+
+    private void Start()
+    {
+        _scoreText.text = "Điểm: 0";
+        _suggetBtn.onClick.AddListener(() =>
+        {
+            GetSuggest();
+        });
+    }
+
+    private void Update()
+    {
+        var entry = Input.GetKey(KeyCode.Space);
+        if(entry) GetSuggest();
     }
 
     public void SetItem(CardItem cardItem)
@@ -58,9 +77,15 @@ public partial class MainManager : MonoBehaviour
         }
 
         _isPassItem = true;
-        CompareItems(_firstItem, _lastItem);
+        var isPass = CompareItems(_firstItem, _lastItem);
+        if(isPass) AddScore();
     }
 
+    private void AddScore()
+    {
+        _score += 10;
+        _scoreText.text = "Điểm: " + _score;
+    }
     private void SetDefaultWorkingItem()
     {
         Invoke(nameof(ClearItem),0.2f);
@@ -68,8 +93,8 @@ public partial class MainManager : MonoBehaviour
 
     private void ClearItem()
     {
-        _firstItem._spriteRenderer.color = Color.white;
-        _lastItem._spriteRenderer.color = Color.white;
+        if(_firstItem) _firstItem._spriteRenderer.color = Color.white;
+        if(_lastItem) _lastItem._spriteRenderer.color = Color.white;
         _firstItem = null;
         _lastItem = null;
     }

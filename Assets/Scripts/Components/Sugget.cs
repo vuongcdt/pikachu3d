@@ -11,8 +11,14 @@ public partial class MainManager
         SuggetTogether();
         // SuggetNotTogether();
         if (_suggetItems.Count > 0)
+        {
             RenderLineSuggest();
-        else RerenderGrid();
+        }
+        else
+        {
+            RerenderGrid();
+            // GetSuggest();
+        }
     }
 
     private void SuggetTogether()

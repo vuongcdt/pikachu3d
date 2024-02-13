@@ -141,7 +141,7 @@ public partial class MainManager
         // _lastItem.SetShow(false);
 
         SetDefaultWorkingItem();
-        GetSuggest();
+        // GetSuggest();
     }
 
     private void RemoveLine()
