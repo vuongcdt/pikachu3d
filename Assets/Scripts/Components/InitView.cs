@@ -13,12 +13,12 @@ public partial class MainManager
         foreach (var num in nums)
         {
             var image = Resources.Load<Sprite>($"pieces{num}");
-            var imageWithId = new ImageWithType(image, num);
+            var imageWithType = new ImageWithType(image, num);
 
-            _images.Add(imageWithId);
-            _images.Add(imageWithId);
-            _images.Add(imageWithId);
-            _images.Add(imageWithId);
+            _images.Add(imageWithType);
+            _images.Add(imageWithType);
+            _images.Add(imageWithType);
+            _images.Add(imageWithType);
         }
 
         //fix
@@ -49,13 +49,13 @@ public partial class MainManager
 
                 var isHas = !(y == 0 || y == _height - 1 || x == 0 || x == _width - 1);
 
-                var imageWithId = isHas ? _images[count] : new ImageWithType();
-                imageWithId.Id = index;
-                spawnedItem.name = $"Card Item {x} {y} {imageWithId.TypeImage}";
+                var imageWithType = isHas ? _images[count] : new ImageWithType();
+                imageWithType.Id = index;
+                spawnedItem.name = $"Card Item {x} {y} {imageWithType.TypeImage}";
 
-                spawnedItem.Init(this, imageWithId);
+                spawnedItem.Init(this, imageWithType);
                 spawnedItem.IsHas = isHas;
-                spawnedItem.TypeImage = imageWithId.TypeImage;
+                spawnedItem.TypeImage = imageWithType.TypeImage;
                 spawnedItem.Id = index;
 
                 _spawnedItemsList.Add(spawnedItem);
