@@ -15,10 +15,7 @@ public partial class MainManager
             var image = Resources.Load<Sprite>($"pieces{num}");
             var imageWithType = new ImageWithType(image, num);
 
-            _images.Add(imageWithType);
-            _images.Add(imageWithType);
-            _images.Add(imageWithType);
-            _images.Add(imageWithType);
+            _images.AddRange(new[] { imageWithType, imageWithType, imageWithType, imageWithType });
         }
 
         //fix
@@ -53,8 +50,10 @@ public partial class MainManager
                 imageWithType.Id = index;
                 spawnedItem.name = $"Card Item {x} {y} {imageWithType.TypeImage}";
 
+                var entry = x < 3 && y < 3 || true;
+
                 spawnedItem.Init(this, imageWithType);
-                spawnedItem.IsHas = isHas;
+                spawnedItem.IsHas = entry && isHas;
                 spawnedItem.TypeImage = imageWithType.TypeImage;
                 spawnedItem.Id = index;
 
@@ -63,26 +62,5 @@ public partial class MainManager
                 if (isHas) count++;
             }
         }
-
-        // CheckTypeItem();
-    }
-
-    private void CheckTypeItem(List<CardItem> cardItems)
-    {
-        var checkType = cardItems
-            .GroupBy(e => e.TypeImage)
-            .Select(e => new
-            {
-                key = e.Key,
-                total = e.Count()
-            })
-            .OrderBy(e => e.key);
-        string inLog = "";
-        foreach (var i in checkType)
-        {
-            inLog += i.key + "-" + i.total + "; ";
-        }
-
-        Debug.Log(inLog);
     }
 }

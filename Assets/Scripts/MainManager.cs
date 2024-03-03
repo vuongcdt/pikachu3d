@@ -19,7 +19,7 @@ public partial class MainManager : MonoBehaviour
     private int _score;
 
     private List<ImageWithType> _images = new List<ImageWithType>();
-    private readonly List<CardItem> _spawnedItemsList = new List<CardItem>();
+    private List<CardItem> _spawnedItemsList = new List<CardItem>();
     private List<CardItem> _suggetItems = new List<CardItem>();
     private readonly List<LineRenderer> _lines = new List<LineRenderer>();
 
@@ -42,8 +42,9 @@ public partial class MainManager : MonoBehaviour
 
     private void Update()
     {
-        var entry = Input.GetKey(KeyCode.Space);
+        var entry = Input.GetKeyUp(KeyCode.Space);
         if(entry) GetSuggest();
+        // if(entry) RerenderGrid();
     }
 
     public void SetItem(CardItem cardItem)
@@ -55,12 +56,10 @@ public partial class MainManager : MonoBehaviour
 
         if (_firstItem == null)
         {
-            // Debug.Log("Set first item!" + cardItem.ToString());
             _firstItem = cardItem;
             return;
         }
 
-        // Debug.Log("Set last item!" + cardItem.ToString());
         _lastItem = cardItem;
 
         if (_firstItem.Id == cardItem.Id)
@@ -71,7 +70,6 @@ public partial class MainManager : MonoBehaviour
 
         if (_firstItem.TypeImage != _lastItem.TypeImage)
         {
-            // Debug.Log("Not same!");
             SetDefaultWorkingItem();
             return;
         }

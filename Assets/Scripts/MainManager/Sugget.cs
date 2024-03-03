@@ -8,8 +8,7 @@ public partial class MainManager
     {
         _suggetItems = new List<CardItem>();
 
-        SuggetTogether();
-        // SuggetNotTogether();
+        SuggetNotTogether();
         if (_suggetItems.Count > 0)
         {
             RenderLineSuggest();
@@ -18,31 +17,6 @@ public partial class MainManager
         {
             RerenderGrid();
             // GetSuggest();
-        }
-    }
-
-    private void SuggetTogether()
-    {
-        for (var i = 0; i < _spawnedItemsList.Count - _height; i++)
-        {
-            var entryTogetherRow = _spawnedItemsList[i].TypeImage == _spawnedItemsList[i + 1].TypeImage
-                                   && _spawnedItemsList[i].IsHas
-                                   && _spawnedItemsList[i + 1].IsHas;
-            var entryTogetherCol = _spawnedItemsList[i].TypeImage == _spawnedItemsList[i + _height].TypeImage
-                                   && _spawnedItemsList[i].IsHas
-                                   && _spawnedItemsList[i + _height].IsHas;
-
-            if (entryTogetherRow)
-            {
-                _suggetItems.AddRange(new[] { _spawnedItemsList[i], _spawnedItemsList[i + 1] });
-                break;
-            }
-
-            if (entryTogetherCol)
-            {
-                _suggetItems.AddRange(new[] { _spawnedItemsList[i], _spawnedItemsList[i + _height] });
-                break;
-            }
         }
     }
 
