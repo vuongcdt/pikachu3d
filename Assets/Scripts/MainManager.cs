@@ -23,7 +23,7 @@ public partial class MainManager : MonoBehaviour
     private List<CardItem> _suggetItems = new List<CardItem>();
     private readonly List<LineRenderer> _lines = new List<LineRenderer>();
 
-    private const float ZLine = -0.01f;
+    private const float ZLine = -0.0001f;
 
     private void Awake()
     {
@@ -44,7 +44,12 @@ public partial class MainManager : MonoBehaviour
     {
         var entry = Input.GetKeyUp(KeyCode.Space);
         if(entry) GetSuggest();
+        var mouseDown = Input.GetMouseButtonDown(0);
         // if(entry) RerenderGrid();
+        if (mouseDown)
+        {
+           
+        }
     }
 
     public void SetItem(CardItem cardItem)

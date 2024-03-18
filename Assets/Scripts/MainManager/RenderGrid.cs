@@ -5,6 +5,8 @@ using UnityEngine;
 
 public partial class MainManager
 {
+    private int _lever = 0;
+
     private void GetResouece()
     {
         if (_images.Count > 0) return;
@@ -12,7 +14,7 @@ public partial class MainManager
         var nums = Enumerable.Range(1, 36);
         foreach (var num in nums)
         {
-            var image = Resources.Load<Sprite>($"pieces{num}");
+            var image = Resources.Load<Sprite>(string.Format(Constants.ImagePath,num));
             var imageWithType = new ImageWithType(image, num);
 
             _images.AddRange(new[] { imageWithType, imageWithType, imageWithType, imageWithType });
@@ -24,9 +26,48 @@ public partial class MainManager
 
     private void RamdomImages()
     {
-        _images = _images
+        var listIndex = new List<int>();
+        var total = _images.Count - 10;
+        while (true)
+        {
+            if (listIndex.Count() == _lever)
+            {
+                break;
+            }
+            var randomInt = Random.Range(0, total);
+            if (listIndex.Contains(randomInt)
+                || listIndex.Contains(randomInt + 1)
+                || listIndex.Contains(randomInt - 1)) continue;
+            
+            listIndex.Add(randomInt);
+            listIndex.Add(randomInt + 1);
+        }
+
+        List<ImageWithType> listTempSugget = new List<ImageWithType>();
+        List<ImageWithType> listTempRandom = new List<ImageWithType>();
+
+        for (var i = 0; i < _images.Count; i++)
+        {
+            if (listIndex.Contains(i))
+            {
+                listTempSugget.Add(_images[i]);
+            }
+            else
+            {
+                listTempRandom.Add(_images[i]);
+            }
+        }
+
+        _images = listTempRandom
             .OrderBy(e => Random.Range(0, _width * _height))
             .ToList();
+        
+        listIndex = listIndex.OrderBy(e => e).ToList();
+        
+        for (var i = 0; i < listIndex.Count; i++)
+        {
+            _images.Insert(listIndex[i], listTempSugget[i]);
+        }
     }
 
     private void GenerateGrid()
@@ -48,12 +89,11 @@ public partial class MainManager
 
                 var imageWithType = isHas ? _images[count] : new ImageWithType();
                 imageWithType.Id = index;
-                spawnedItem.name = $"Card Item {x} {y} {imageWithType.TypeImage}";
-
-                var entry = x < 3 && y < 3 || true;
+                spawnedItem.name = string.Format(Constants.ImageName,x,y,imageWithType.TypeImage);
+                // spawnedItem.name = $"Card Item {x} {y} {imageWithType.TypeImage}";
 
                 spawnedItem.Init(this, imageWithType);
-                spawnedItem.IsHas = entry && isHas;
+                spawnedItem.IsHas = isHas;
                 spawnedItem.TypeImage = imageWithType.TypeImage;
                 spawnedItem.Id = index;
 
