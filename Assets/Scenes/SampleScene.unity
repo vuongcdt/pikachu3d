@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _width: 18
   _height: 11
-  parentObj: {fileID: 1912869897}
+  parentObj: {fileID: 0}
   _cardItem: {fileID: 7699143090038438644, guid: ef895e6af7f0be24fb5c44981ea8de01, type: 3}
   _lineRenderer: {fileID: 819157855412199267, guid: c6c825f13297cbc47b850e27ab79b87f, type: 3}
   _suggetBtn: {fileID: 811449042}
@@ -732,14 +732,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1912869897
-Transform:
+--- !u!224 &1912869897
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1912869896}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -747,12 +746,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 566288565}
   - {fileID: 280464269}
-  - {fileID: 1912869897}
   - {fileID: 475903438}
   - {fileID: 567513134}
+  - {fileID: 1912869897}

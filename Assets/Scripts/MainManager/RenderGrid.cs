@@ -5,7 +5,7 @@ using UnityEngine;
 
 public partial class MainManager
 {
-    private int _lever = 0;
+    private int _itemLever = 10; // =10
 
     private void GetResouece()
     {
@@ -30,7 +30,8 @@ public partial class MainManager
         var total = _images.Count - 10;
         while (true)
         {
-            if (listIndex.Count() == _lever)
+            Debug.Log(listIndex.Count + " listIndex.Count");
+            if (listIndex.Count == _itemLever)
             {
                 break;
             }
@@ -69,7 +70,41 @@ public partial class MainManager
             _images.Insert(listIndex[i], listTempSugget[i]);
         }
     }
+    private void GenerateGridHorizontalBot()
+    {
+        int count = 0;
+        for (int x = 0; x < _height; x++)
+        {
+            for (int y = 0; y < _width; y++)
+            {
+                var index = x * _width + y + 1;
 
+                var spawnedItem = Instantiate(
+                    _cardItem,
+                    new Vector3(y - (_width / 2f - 0.5f), x - (_height / 2f - 0.5f)),
+                    Quaternion.identity,
+                    parentObj);
+                
+                
+                var isHas = !(y == 0 || y == _width - 1 || x == 0 || x == _height - 1);
+
+                
+                var imageWithType = isHas ? _images[count] : new ImageWithType();
+                imageWithType.Id = index;
+                spawnedItem.name = string.Format(Constants.ImageName,x,y,imageWithType.TypeImage);
+                // spawnedItem.name = $"Card Item {x} {y} {imageWithType.TypeImage}";
+
+                spawnedItem.Init(this, imageWithType);
+                spawnedItem.IsHas = isHas;
+                spawnedItem.TypeImage = imageWithType.TypeImage;
+                spawnedItem.Id = index;
+
+                _spawnedItemsList.Add(spawnedItem);
+
+                if (isHas) count++;
+            }
+        }
+    }
     private void GenerateGrid()
     {
         int count = 0;
@@ -84,7 +119,8 @@ public partial class MainManager
                     new Vector3(x - (_width / 2f - 0.5f), y - (_height / 2f - 0.5f)),
                     Quaternion.identity,
                     parentObj);
-
+                
+                
                 var isHas = !(y == 0 || y == _height - 1 || x == 0 || x == _width - 1);
 
                 var imageWithType = isHas ? _images[count] : new ImageWithType();

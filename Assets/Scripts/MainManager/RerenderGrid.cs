@@ -4,8 +4,12 @@ using UnityEngine;
 
 public partial class MainManager
 {
+    private int rerenderCount = 0;
+
     private void RerenderGrid()
     {
+        rerenderCount++;
+        Debug.Log("RerenderGrid " + rerenderCount);
         var listHas = _spawnedItemsList
             .Where(e => e.IsHas)
             .ToList();
@@ -18,11 +22,13 @@ public partial class MainManager
         {
             var oldValue = listHas[listIndex[i]];
             var newValue = listHas[listIndex[listIndex.Count - 1 - i]];
-            
+
             (oldValue._spriteRenderer.sprite, newValue._spriteRenderer.sprite)
                 = (newValue._spriteRenderer.sprite, oldValue._spriteRenderer.sprite);
             (oldValue.TypeImage, newValue.TypeImage)
                 = (newValue.TypeImage, oldValue.TypeImage);
+            (oldValue.Id, newValue.Id)
+                = (newValue.Id, oldValue.Id);
         }
     }
 }

@@ -9,6 +9,7 @@ public partial class MainManager
         _suggetItems = new List<CardItem>();
 
         SuggetNotTogether();
+        
         if (_suggetItems.Count > 0)
         {
             RenderLineSuggest();
@@ -88,7 +89,7 @@ public partial class MainManager
 
         _suggetItems[0]._spriteRenderer.color = Color.grey;
         InvokeRepeating(nameof(ToggleColorCard), 0, 0.2f);
-        Invoke(nameof(ClearInvoke), 0.5f);
+        Invoke(nameof(ClearInvoke), 2f);
     }
 
     private void ClearInvoke()

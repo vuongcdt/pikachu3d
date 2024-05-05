@@ -28,7 +28,8 @@ public partial class MainManager : MonoBehaviour
     private void Awake()
     {
         GetResouece();
-        GenerateGrid();
+        // GenerateGrid();
+        GenerateGridHorizontalBot();
     }
 
     private void Start()
@@ -40,16 +41,13 @@ public partial class MainManager : MonoBehaviour
         });
     }
 
+    // danh cho test chay nhanh
     private void Update()
     {
         var entry = Input.GetKeyUp(KeyCode.Space);
         if(entry) GetSuggest();
         var mouseDown = Input.GetMouseButtonDown(0);
         // if(entry) RerenderGrid();
-        if (mouseDown)
-        {
-           
-        }
     }
 
     public void SetItem(CardItem cardItem)
@@ -82,6 +80,8 @@ public partial class MainManager : MonoBehaviour
         _isPassItem = true;
         var isPass = CompareItems(_firstItem, _lastItem);
         if(isPass) AddScore();
+        
+        GetSuggest();//fix bug het con an ko render lai grid
     }
 
     private void AddScore()
