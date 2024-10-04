@@ -30,7 +30,6 @@ public partial class MainManager
         var total = _images.Count - 10;
         while (true)
         {
-            Debug.Log(listIndex.Count + " listIndex.Count");
             if (listIndex.Count == _itemLever)
             {
                 break;
@@ -92,7 +91,6 @@ public partial class MainManager
                 var imageWithType = isHas ? _images[count] : new ImageWithType();
                 imageWithType.Id = index;
                 spawnedItem.name = string.Format(Constants.ImageName,x,y,imageWithType.TypeImage);
-                // spawnedItem.name = $"Card Item {x} {y} {imageWithType.TypeImage}";
 
                 spawnedItem.Init(this, imageWithType);
                 spawnedItem.IsHas = isHas;
@@ -126,7 +124,6 @@ public partial class MainManager
                 var imageWithType = isHas ? _images[count] : new ImageWithType();
                 imageWithType.Id = index;
                 spawnedItem.name = string.Format(Constants.ImageName,x,y,imageWithType.TypeImage);
-                // spawnedItem.name = $"Card Item {x} {y} {imageWithType.TypeImage}";
 
                 spawnedItem.Init(this, imageWithType);
                 spawnedItem.IsHas = isHas;

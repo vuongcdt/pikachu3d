@@ -4,20 +4,22 @@ using UnityEngine;
 
 public partial class MainManager
 {
-    private void GetSuggest()
+    private void GetSuggest(bool isActive = true)
     {
         _suggetItems = new List<CardItem>();
 
         SuggetNotTogether();
-        
+
         if (_suggetItems.Count > 0)
         {
-            RenderLineSuggest();
+            if(isActive)
+            {
+                SuggestLine();
+            }
         }
         else
         {
             RerenderGrid();
-            // GetSuggest();
         }
     }
 
@@ -58,7 +60,6 @@ public partial class MainManager
 
         foreach (var compare in compareList)
         {
-            // Debug.Log(compare.Key + "__" + compare.Total);
             var cardItemsList = compare.ItemsList;
 
             for (var i = 0; i < cardItemsList.Count; i++)
@@ -80,12 +81,8 @@ public partial class MainManager
         }
     }
 
-    private void RenderLineSuggest()
+    private void SuggestLine()
     {
-        foreach (var itemStore in _suggetItems)
-        {
-            RenderLineSuggest(itemStore);
-        }
 
         _suggetItems[0]._spriteRenderer.color = Color.grey;
         InvokeRepeating(nameof(ToggleColorCard), 0, 0.2f);

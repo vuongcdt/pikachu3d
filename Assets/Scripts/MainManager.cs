@@ -34,6 +34,7 @@ public partial class MainManager : MonoBehaviour
 
     private void Start()
     {
+        _lineRenderer = GetComponent<LineRenderer>();
         _scoreText.text = "Điểm: 0";
         _suggetBtn.onClick.AddListener(() =>
         {
@@ -47,7 +48,6 @@ public partial class MainManager : MonoBehaviour
         var entry = Input.GetKeyUp(KeyCode.Space);
         if(entry) GetSuggest();
         var mouseDown = Input.GetMouseButtonDown(0);
-        // if(entry) RerenderGrid();
     }
 
     public void SetItem(CardItem cardItem)
@@ -79,9 +79,9 @@ public partial class MainManager : MonoBehaviour
 
         _isPassItem = true;
         var isPass = CompareItems(_firstItem, _lastItem);
-        if(isPass) AddScore();
-        
-        GetSuggest();//fix bug het con an ko render lai grid
+        if (isPass) {
+            AddScore(); 
+        }
     }
 
     private void AddScore()
@@ -89,16 +89,19 @@ public partial class MainManager : MonoBehaviour
         _score += 10;
         _scoreText.text = "Điểm: " + _score;
     }
+
     private void SetDefaultWorkingItem()
     {
-        Invoke(nameof(ClearItem),0.2f);
+        Invoke(nameof(ClearItem), 0.2f);
     }
 
     private void ClearItem()
     {
-        if(_firstItem) _firstItem._spriteRenderer.color = Color.white;
-        if(_lastItem) _lastItem._spriteRenderer.color = Color.white;
+        if (_firstItem) _firstItem._spriteRenderer.color = Color.white;
+        if (_lastItem) _lastItem._spriteRenderer.color = Color.white;
         _firstItem = null;
         _lastItem = null;
+
+        GetSuggest(false);//het con an render lai grid
     }
 }

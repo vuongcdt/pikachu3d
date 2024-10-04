@@ -9,7 +9,6 @@ public partial class MainManager
     private void RerenderGrid()
     {
         rerenderCount++;
-        Debug.Log("RerenderGrid " + rerenderCount);
         var listHas = _spawnedItemsList
             .Where(e => e.IsHas)
             .ToList();

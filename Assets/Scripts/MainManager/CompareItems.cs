@@ -118,11 +118,6 @@ public partial class MainManager
         _lineRenderer.positionCount = 4;
         _lineRenderer.SetPositions(points);
 
-        _lines.Add(Instantiate(
-            _lineRenderer,
-            points[0],
-            Quaternion.identity,
-            parentObj));
         Invoke(nameof(RemoveLine), 0.2f);
     }
 
@@ -137,15 +132,12 @@ public partial class MainManager
                 e._spriteRenderer.sprite = null;
             }
         });
-        // _firstItem.SetShow(false);
-        // _lastItem.SetShow(false);
 
         SetDefaultWorkingItem();
-        // GetSuggest();
     }
 
     private void RemoveLine()
     {
-        _lines.ForEach(e => e.positionCount = 0);
+        _lineRenderer.positionCount = 0;
     }
 }
